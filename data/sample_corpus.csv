@@ -1,0 +1,13 @@
+text,expected_sentiment
+I absolutely love this product! It is amazing.,Positive
+I am very happy with the service.,Positive
+This is wonderful and fantastic!,Positive
+I really enjoyed my experience.,Positive
+I hate this product. It is terrible.,Negative
+The service was horrible and disappointing.,Negative
+I am very angry about this experience.,Negative
+This is the worst experience I have ever had.,Negative
+The meeting is scheduled for three o'clock.,Neutral
+The package arrived this morning.,Neutral
+The product is available in three different sizes.,Neutral
+The weather report says it will rain tomorrow.,Neutral
