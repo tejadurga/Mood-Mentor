@@ -1,0 +1,7 @@
+user_id,timestamp,content_id,interaction_type,rating,emotion_state,intensity_score,preference_key,preference_value
+demo_user_001,2026-09-15T09:00:00,C003,accepted,5.0,Very High-intensity mixed emotional state,0.82,,
+demo_user_001,2026-09-15T09:05:00,C004,viewed,4.0,Very High-intensity mixed emotional state,0.82,,
+demo_user_001,2026-09-16T18:00:00,C014,rejected,1.0,Moderate-intensity joy state,0.58,,
+demo_user_002,2026-09-15T17:30:00,C005,accepted,5.0,Very High-intensity joy state,0.88,,
+demo_user_002,2026-09-16T18:00:00,C011,accepted,4.0,High-intensity surprise state,0.73,,
+demo_user_001,2026-09-22T20:55:52,C001,accepted,5.0,High-intensity fear state,0.84,,

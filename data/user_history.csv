@@ -1,0 +1,8 @@
+user_id,timestamp,content_id,interaction_type,emotion_state,intensity_score,intensity_level,was_completed,helpfulness_rating
+demo_user_001,2026-09-10T09:30:00,C001,completed,fear,0.86,Very High,True,5
+demo_user_001,2026-09-11T18:15:00,C004,completed,sadness,0.68,High,True,4
+demo_user_001,2026-09-13T20:00:00,C003,completed,fear,0.74,High,True,5
+demo_user_001,2026-09-14T19:30:00,C014,skipped,joy,0.61,High,False,2
+demo_user_002,2026-09-10T17:00:00,C005,completed,joy,0.88,Very High,True,5
+demo_user_002,2026-09-12T16:20:00,C011,completed,surprise,0.73,High,True,4
+demo_user_002,2026-09-14T17:45:00,C005,completed,joy,0.91,Very High,True,5

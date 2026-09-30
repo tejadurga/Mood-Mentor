@@ -1,0 +1,13 @@
+user_id,timestamp,dominant_emotion,detected_emotions,intensity_score,intensity_level,polarity,polarity_score,emotional_state
+demo_user_001,2026-09-01T09:00:00,fear,"fear",0.82,Very High,Negative,-0.62,Very High-intensity fear state
+demo_user_001,2026-09-03T18:30:00,sadness,"sadness",0.71,High,Negative,-0.54,High-intensity sadness state
+demo_user_001,2026-09-05T20:15:00,fear,"fear;sadness",0.77,High,Negative,-0.58,High-intensity mixed emotional state
+demo_user_001,2026-09-07T11:45:00,sadness,"sadness",0.64,High,Negative,-0.47,High-intensity sadness state
+demo_user_001,2026-09-09T17:00:00,joy,"joy",0.58,Moderate,Positive,0.61,Moderate-intensity joy state
+demo_user_001,2026-09-11T21:00:00,fear,"fear;sadness",0.81,Very High,Negative,-0.65,Very High-intensity mixed emotional state
+demo_user_002,2026-09-01T10:00:00,joy,"joy",0.88,Very High,Positive,0.72,Very High-intensity joy state
+demo_user_002,2026-09-03T16:00:00,surprise,"surprise;joy",0.73,High,Positive,0.66,High-intensity mixed emotional state
+demo_user_002,2026-09-05T19:00:00,joy,"joy",0.91,Very High,Positive,0.81,Very High-intensity joy state
+demo_user_002,2026-09-07T14:30:00,surprise,"surprise",0.68,High,Positive,0.58,High-intensity surprise state
+demo_user_002,2026-09-09T18:00:00,joy,"joy;surprise",0.79,High,Positive,0.70,High-intensity mixed emotional state
+demo_user_002,2026-09-11T20:00:00,joy,"joy",0.86,Very High,Positive,0.76,Very High-intensity joy state

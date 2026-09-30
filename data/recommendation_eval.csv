@@ -1,0 +1,7 @@
+scenario_id,user_id,user_text,detected_emotions,emotion_intensity,expected_relevant_content_ids,expected_accepted_content_ids
+E001,demo_user_001,"I feel scared and overwhelmed about tomorrow.","fear;sadness",0.82,"C001;C003;C004;C009;C010;C012;C015","C001;C003;C004"
+E002,demo_user_002,"I am extremely happy and excited about the wonderful news.","joy;surprise",0.90,"C002;C005;C011;C014","C005;C011;C014"
+E003,demo_user_001,"I am furious and disgusted by what happened.","anger;disgust",0.88,"C006;C007;C013;C015","C006;C013"
+E004,demo_user_001,"I have been feeling low and sad for several days.","sadness",0.67,"C003;C004;C007;C010;C012;C015","C003;C010;C015"
+E005,demo_user_002,"I am nervous and afraid about an upcoming situation.","fear",0.76,"C001;C003;C009;C010;C012","C001;C009;C012"
+E006,demo_user_001,"This situation is making me very angry.","anger",0.84,"C006;C007;C008;C013;C015","C006;C008;C013"

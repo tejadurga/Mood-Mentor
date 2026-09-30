@@ -1,0 +1,16 @@
+content_id,title,description,category,target_emotions,intensity_level,activity_type,duration_minutes
+C001,Box Breathing Reset,Use slow controlled breathing to reduce immediate tension and regain a sense of calm.,Breathing,"fear;anger",Moderate,Breathing,5
+C002,Gratitude Reflection,Write down three things that went well today and why they mattered to you.,Journaling,"joy;surprise",Low,Journaling,10
+C003,Calm Body Scan,Slowly notice sensations in different parts of the body without judging them.,Mindfulness,"sadness;fear;anger",Moderate,Mindfulness,10
+C004,Gentle Walk,Take a short mindful walk and focus attention on breathing movement and surroundings.,Movement,"sadness;anger;fear",Low,Walking,15
+C005,Positive Music Break,Listen to a positive song or playlist and give yourself a short mental reset.,Music,"joy;surprise",Low,Music,8
+C006,Anger Pause Technique,Pause before reacting and use breathing plus a short reflection to lower emotional activation.,Breathing,"anger;disgust",High,Breathing,7
+C007,Self-Compassion Journal,Write about what happened and respond to yourself with the same kindness you would give a friend.,Journaling,"sadness;anger;disgust",Moderate,Journaling,12
+C008,Five Minute Stretch,Perform gentle stretches while focusing on slow breathing and physical relaxation.,Movement,"anger;fear;sadness",Low,Stretching,5
+C009,Grounding Five Four Three Two One,Use your senses to identify things around you and bring attention back to the present moment.,Grounding,"fear;surprise",High,Grounding,6
+C010,Mindful Tea Break,Take a quiet break and focus on the taste smell temperature and pace of drinking.,Mindfulness,"sadness;fear",Low,Mindfulness,10
+C011,Creative Doodle Break,Spend a few minutes drawing freely without focusing on the quality of the result.,Creative,"joy;surprise;sadness",Moderate,Creative,15
+C012,Sleep Wind Down,Follow a quiet routine with reduced stimulation and slow breathing before sleep.,Sleep,"fear;sadness",Moderate,Sleep,20
+C013,Compassionate Check In,Pause and name what you are feeling before writing one supportive response to yourself.,Journaling,"disgust;anger;sadness",High,Journaling,8
+C014,Celebration Playlist,Create or listen to a playlist that matches a positive mood and encourages an enjoyable break.,Music,"joy;surprise",Low,Music,10
+C015,Reflect and Reframe,Write down a difficult thought and explore a more balanced way to interpret the situation.,Journaling,"anger;sadness;fear",Moderate,Journaling,15
