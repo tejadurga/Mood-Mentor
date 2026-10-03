@@ -21,7 +21,8 @@ from src.report import (
 )
 
 from src.recommendation_data import (
-    get_user_profile
+    get_user_profile,
+    get_user_history
 )
 
 from src.recommendation_engine import (
@@ -46,8 +47,32 @@ from src.recommendation_feedback import (
     get_feedback_summary,
     get_user_feedback
 )
-
-
+from src.dashboard import (
+    display_mood_dashboard
+)
+from src.trend_dashboard import (
+    display_emotional_trend_dashboard
+)
+from src.recommendation_history import (
+    save_recommendation_history,
+    get_user_recommendation_history
+)
+from src.search_filters import (
+    search_dataframe,
+    filter_by_date_range,
+    filter_by_emotion,
+    filter_by_intensity,
+    filter_by_recommendation_type,
+    filter_by_feedback_status,
+    filter_wellness_content,
+    filter_recommendation_history,
+    filter_feedback
+)
+from src.wellness_report import (
+    build_report_tables,
+    build_csv_report,
+    build_pdf_report
+)
 # ==================================================
 # PAGE CONFIGURATION
 # ==================================================
@@ -1508,6 +1533,23 @@ if st.button(
         display_emotional_trends(
             trend_analysis
         )
+        # ------------------------------------------------
+        # MILESTONE 4 — EMOTIONAL TREND VISUALIZATION
+        # ------------------------------------------------
+
+        try:
+
+            display_emotional_trend_dashboard(
+                user_id=user_id
+            )
+        
+
+        except Exception as error:
+
+            st.error(
+                f"Advanced emotional trend visualization "
+                f"failed: {error}"
+            )
 
     except Exception as error:
 
@@ -1617,6 +1659,32 @@ if st.button(
         ] = explainable_recommendations
 
         # ------------------------------------------------
+        # MILESTONE 4 — SAVE RECOMMENDATION HISTORY
+        # ------------------------------------------------
+
+        try:
+
+            save_recommendation_history(
+                user_id=user_id,
+                recommendations=ranking_result[
+                    "recommendations"
+                ],
+                emotional_state=emotional_state,
+                detected_emotions=(
+                    emotional_state[
+                        "detected_emotions"
+                    ]
+                )
+            )
+
+        except Exception as error:
+
+            st.warning(
+                f"Recommendation history could not "
+                f"be saved: {error}"
+            )
+
+        # ------------------------------------------------
         # DISPLAY RECOMMENDATIONS
         # ------------------------------------------------
 
@@ -1626,6 +1694,172 @@ if st.button(
             user_text=original_text,
             emotional_state=emotional_state
         )
+            # ------------------------------------------------
+        # MILESTONE 4 — TASK 5
+        # REPORT GENERATION & EXPORT
+        # ------------------------------------------------
+
+        st.divider()
+
+        st.header(
+            "📄 Report Generation & Export"
+        )
+
+        st.write(
+            "Generate a complete report containing "
+            "the current emotional analysis, trends, "
+            "and personalized recommendations."
+        )
+
+        try:
+
+            report_sections = build_report_tables(
+                user_id=user_id,
+                user_text=original_text,
+                sentiment_result=sentiment_result,
+                emotion_result=emotion_result,
+                emotional_state=emotional_state,
+                trend_analysis=trend_analysis,
+                ranking_result=ranking_result
+            )
+
+            csv_report = build_csv_report(
+                report_sections
+            )
+
+            pdf_report = build_pdf_report(
+                report_sections
+            )
+
+            report_col1, report_col2 = (
+                st.columns(2)
+            )
+
+            with report_col1:
+
+                st.download_button(
+                    label="⬇️ Download Complete CSV Report",
+                    data=csv_report,
+                    file_name=(
+                        f"mood_mentor_report_"
+                        f"{user_id}.csv"
+                    ),
+                    mime="text/csv",
+                    key="complete_csv_report"
+                )
+
+            with report_col2:
+
+                st.download_button(
+                    label="⬇️ Download Complete PDF Report",
+                    data=pdf_report,
+                    file_name=(
+                        f"mood_mentor_report_"
+                        f"{user_id}.pdf"
+                    ),
+                    mime="application/pdf",
+                    key="complete_pdf_report"
+                )
+
+            st.success(
+                "Complete report generated successfully."
+            )
+
+        except Exception as error:
+
+            st.error(
+                f"Report generation failed: {error}"
+            )
+        # ------------------------------------------------
+        # MILESTONE 4 — ADVANCED MOOD DASHBOARD
+        # ------------------------------------------------
+
+        try:
+
+            dashboard_history = get_user_history(
+                user_id
+            )
+
+            display_mood_dashboard(
+                sentiment_result=sentiment_result,
+                emotion_result=emotion_result,
+                emotional_state=emotional_state,
+                ranking_result=ranking_result,
+                user_history=dashboard_history,
+                user_id=user_id
+            )
+
+        except Exception as error:
+
+            st.error(
+                f"Dashboard rendering failed: {error}"
+            )
+
+        # ------------------------------------------------
+        # VALIDATION SUMMARY
+        # ------------------------------------------------
+
+        with st.expander(
+            "🔎 Recommendation System Validation"
+        ):
+
+            col1, col2, col3, col4 = (
+                st.columns(4)
+            )
+
+            with col1:
+
+                st.metric(
+                    "Candidates",
+                    ranking_result[
+                        "total_candidates"
+                    ]
+                )
+
+            with col2:
+
+                st.metric(
+                    "Ranked",
+                    ranking_result[
+                        "total_ranked"
+                    ]
+                )
+
+            with col3:
+
+                st.metric(
+                    "Duplicates Removed",
+                    ranking_result[
+                        "duplicates_removed"
+                    ]
+                )
+
+            with col4:
+
+                st.metric(
+                    "Low-Relevance Removed",
+                    ranking_result[
+                        "low_relevance_removed"
+                    ]
+                )
+
+            st.write(
+                "The recommendation order is calculated "
+                "dynamically from current emotion, "
+                "emotion intensity, preferences, "
+                "historical patterns, previous interactions, "
+                "semantic relevance, feedback, and "
+                "content similarity."
+            )
+
+    except Exception as error:
+
+        st.error(
+            f"Recommendation engine failed: {error}"
+        )
+
+           
+    
 
         # ------------------------------------------------
         # VALIDATION SUMMARY
@@ -1700,7 +1934,1041 @@ display_feedback_summary(
     user_id
 )
 
+# ==================================================
+# MILESTONE 4 — RECOMMENDATION HISTORY
+# ==================================================
 
+st.divider()
+
+st.subheader(
+    "🕘 Recommendation History"
+)
+
+try:
+
+    recommendation_history = (
+        get_user_recommendation_history(
+            user_id
+        )
+    )
+
+    if recommendation_history.empty:
+
+        st.info(
+            "No previous recommendations "
+            "have been recorded yet."
+        )
+
+    else:
+
+        st.write(
+            f"Previous recommendation records: "
+            f"**{len(recommendation_history)}**"
+        )
+
+        history_columns = [
+            "timestamp",
+            "content_id",
+            "title",
+            "rank",
+            "hybrid_score",
+            "emotion_state",
+            "intensity_score",
+            "detected_emotions",
+        ]
+
+        available_columns = [
+            column
+            for column in history_columns
+            if column in recommendation_history.columns
+        ]
+
+        history_display = (
+            recommendation_history[
+                available_columns
+            ].copy()
+        )
+
+        if "hybrid_score" in history_display.columns:
+
+            history_display[
+                "hybrid_score"
+            ] = history_display[
+                "hybrid_score"
+            ].map(
+                lambda value:
+                    f"{float(value):.2%}"
+            )
+
+        if "intensity_score" in history_display.columns:
+
+            history_display[
+                "intensity_score"
+            ] = history_display[
+                "intensity_score"
+            ].map(
+                lambda value:
+                    f"{float(value):.2%}"
+            )
+
+        st.dataframe(
+            history_display,
+            use_container_width=True,
+            hide_index=True
+        )
+
+except Exception as error:
+
+    st.error(
+        f"Recommendation history could not "
+        f"be displayed: {error}"
+    )
+# ==================================================
+# MILESTONE 4 — TASK 4
+# ADVANCED SEARCH & FILTERING
+# ==================================================
+
+st.divider()
+
+st.header(
+    "🔎 Advanced Search & Filtering"
+)
+
+st.write(
+    "Search and filter emotional records, "
+    "recommendation history, wellness content, "
+    "and feedback records."
+)
+
+
+# ==================================================
+# SEARCH TABS
+# ==================================================
+
+emotion_tab, recommendation_tab, wellness_tab, feedback_tab = (
+    st.tabs(
+        [
+            "🧠 Emotional Records",
+            "🌿 Recommendations",
+            "🧘 Wellness Content",
+            "📝 Feedback"
+        ]
+    )
+)
+
+
+# ==================================================
+# EMOTIONAL RECORDS
+# ==================================================
+
+with emotion_tab:
+
+    st.subheader(
+        "🧠 Search Emotional Records"
+    )
+
+    try:
+
+        emotion_history = pd.read_csv(
+            "data/emotion_history.csv"
+        )
+
+        if "user_id" in emotion_history.columns:
+
+            emotion_history = emotion_history[
+                emotion_history["user_id"].astype(str)
+                == str(user_id)
+            ].copy()
+
+        if emotion_history.empty:
+
+            st.info(
+                "No emotional records are available "
+                "for this user."
+            )
+
+        else:
+
+            search_text = st.text_input(
+                "Search emotional records",
+                placeholder=(
+                    "Search emotion, state, sentiment..."
+                ),
+                key="emotion_search"
+            )
+
+            filtered_emotions = search_dataframe(
+                emotion_history,
+                search_text=search_text,
+                search_columns=[
+                    "emotion",
+                    "dominant_emotion",
+                    "primary_emotion",
+                    "detected_emotions",
+                    "polarity",
+                    "emotion_state"
+                ]
+            )
+
+            # ------------------------------------------
+            # DATE FILTER
+            # ------------------------------------------
+
+            if "timestamp" in filtered_emotions.columns:
+
+                filtered_emotions[
+                    "timestamp"
+                ] = pd.to_datetime(
+                    filtered_emotions[
+                        "timestamp"
+                    ],
+                    errors="coerce"
+                )
+
+                valid_dates = (
+                    filtered_emotions[
+                        "timestamp"
+                    ]
+                    .dropna()
+                )
+
+                if not valid_dates.empty:
+
+                    min_date = (
+                        valid_dates
+                        .min()
+                        .date()
+                    )
+
+                    max_date = (
+                        valid_dates
+                        .max()
+                        .date()
+                    )
+
+                    date_col1, date_col2 = (
+                        st.columns(2)
+                    )
+
+                    with date_col1:
+
+                        start_date = st.date_input(
+                            "From",
+                            value=min_date,
+                            min_value=min_date,
+                            max_value=max_date,
+                            key="emotion_start_date"
+                        )
+
+                    with date_col2:
+
+                        end_date = st.date_input(
+                            "To",
+                            value=max_date,
+                            min_value=min_date,
+                            max_value=max_date,
+                            key="emotion_end_date"
+                        )
+
+                    filtered_emotions = (
+                        filter_by_date_range(
+                            filtered_emotions,
+                            date_column="timestamp",
+                            start_date=start_date,
+                            end_date=end_date
+                        )
+                    )
+
+            # ------------------------------------------
+            # EMOTION FILTER
+            # ------------------------------------------
+
+            emotion_options = [
+                "All"
+            ]
+
+            possible_emotion_columns = [
+                "emotion",
+                "dominant_emotion",
+                "primary_emotion",
+                "detected_emotions"
+            ]
+
+            emotion_values = set()
+
+            for column in possible_emotion_columns:
+
+                if column in filtered_emotions.columns:
+
+                    values = (
+                        filtered_emotions[
+                            column
+                        ]
+                        .dropna()
+                        .astype(str)
+                        .tolist()
+                    )
+
+                    for value in values:
+
+                        for emotion in (
+                            value
+                            .replace("|", ",")
+                            .replace(";", ",")
+                            .split(",")
+                        ):
+
+                            emotion = (
+                                emotion.strip()
+                            )
+
+                            if emotion:
+                                emotion_values.add(
+                                    emotion.title()
+                                )
+
+            emotion_options.extend(
+                sorted(emotion_values)
+            )
+
+            selected_emotion = st.selectbox(
+                "Emotion",
+                emotion_options,
+                key="emotion_filter"
+            )
+
+            filtered_emotions = filter_by_emotion(
+                filtered_emotions,
+                selected_emotion
+            )
+
+            # ------------------------------------------
+            # INTENSITY FILTER
+            # ------------------------------------------
+
+            intensity_column = next(
+                (
+                    column
+                    for column in [
+                        "intensity_score",
+                        "intensity",
+                        "emotion_intensity"
+                    ]
+                    if column in filtered_emotions.columns
+                ),
+                None
+            )
+
+            if intensity_column:
+
+                filtered_emotions[
+                    intensity_column
+                ] = pd.to_numeric(
+                    filtered_emotions[
+                        intensity_column
+                    ],
+                    errors="coerce"
+                )
+
+                intensity_range = (
+                    st.slider(
+                        "Intensity Range",
+                        min_value=0.0,
+                        max_value=1.0,
+                        value=(0.0, 1.0),
+                        step=0.05,
+                        key="emotion_intensity_filter"
+                    )
+                )
+
+                filtered_emotions = (
+                    filter_by_intensity(
+                        filtered_emotions,
+                        intensity_column=intensity_column,
+                        minimum_intensity=intensity_range[0],
+                        maximum_intensity=intensity_range[1]
+                    )
+                )
+
+            # ------------------------------------------
+            # RESULT
+            # ------------------------------------------
+
+            st.metric(
+                "Matching Records",
+                len(filtered_emotions)
+            )
+
+            st.dataframe(
+                filtered_emotions,
+                use_container_width=True,
+                hide_index=True
+            )
+
+    except Exception as error:
+
+        st.error(
+            f"Emotional record filtering failed: {error}"
+        )
+
+
+# ==================================================
+# RECOMMENDATION HISTORY
+# ==================================================
+
+with recommendation_tab:
+
+    st.subheader(
+        "🌿 Search Recommendation History"
+    )
+
+    try:
+
+        recommendation_history = (
+            get_user_recommendation_history(
+                user_id
+            )
+        )
+
+        if recommendation_history.empty:
+
+            st.info(
+                "No recommendation history is available "
+                "for this user."
+            )
+
+        else:
+
+            # ------------------------------------------
+            # ENRICH HISTORY WITH CONTENT METADATA
+            # ------------------------------------------
+
+            try:
+
+                wellness_content = pd.read_csv(
+                    "data/wellness_content.csv"
+                )
+
+                metadata_columns = [
+                    column
+                    for column in [
+                        "content_id",
+                        "category",
+                        "activity_type",
+                        "duration_minutes"
+                    ]
+                    if column in wellness_content.columns
+                ]
+
+                if (
+                    "content_id"
+                    in metadata_columns
+                ):
+
+                    metadata = wellness_content[
+                        metadata_columns
+                    ].drop_duplicates(
+                        subset=["content_id"]
+                    )
+
+                    recommendation_history = (
+                        recommendation_history
+                        .merge(
+                            metadata,
+                            on="content_id",
+                            how="left",
+                            suffixes=(
+                                "",
+                                "_content"
+                            )
+                        )
+                    )
+
+            except Exception:
+
+                pass
+
+            # ------------------------------------------
+            # SEARCH
+            # ------------------------------------------
+
+            search_text = st.text_input(
+                "Search recommendations",
+                placeholder=(
+                    "Search title, content ID, "
+                    "emotion state..."
+                ),
+                key="recommendation_search"
+            )
+
+            filtered_recommendations = (
+                search_dataframe(
+                    recommendation_history,
+                    search_text=search_text,
+                    search_columns=[
+                        "content_id",
+                        "title",
+                        "emotion_state",
+                        "detected_emotions",
+                        "category",
+                        "activity_type"
+                    ]
+                )
+            )
+
+            # ------------------------------------------
+            # DATE FILTER
+            # ------------------------------------------
+
+            if "timestamp" in filtered_recommendations.columns:
+
+                filtered_recommendations[
+                    "timestamp"
+                ] = pd.to_datetime(
+                    filtered_recommendations[
+                        "timestamp"
+                    ],
+                    errors="coerce"
+                )
+
+                valid_dates = (
+                    filtered_recommendations[
+                        "timestamp"
+                    ]
+                    .dropna()
+                )
+
+                if not valid_dates.empty:
+
+                    min_date = (
+                        valid_dates
+                        .min()
+                        .date()
+                    )
+
+                    max_date = (
+                        valid_dates
+                        .max()
+                        .date()
+                    )
+
+                    date_col1, date_col2 = (
+                        st.columns(2)
+                    )
+
+                    with date_col1:
+
+                        start_date = st.date_input(
+                            "From",
+                            value=min_date,
+                            min_value=min_date,
+                            max_value=max_date,
+                            key="recommendation_start_date"
+                        )
+
+                    with date_col2:
+
+                        end_date = st.date_input(
+                            "To",
+                            value=max_date,
+                            min_value=min_date,
+                            max_value=max_date,
+                            key="recommendation_end_date"
+                        )
+
+                    filtered_recommendations = (
+                        filter_by_date_range(
+                            filtered_recommendations,
+                            date_column="timestamp",
+                            start_date=start_date,
+                            end_date=end_date
+                        )
+                    )
+
+            # ------------------------------------------
+            # EMOTION FILTER
+            # ------------------------------------------
+
+            recommendation_emotions = [
+                "All",
+                "Joy",
+                "Sadness",
+                "Anger",
+                "Fear",
+                "Surprise",
+                "Disgust"
+            ]
+
+            selected_recommendation_emotion = (
+                st.selectbox(
+                    "Emotion",
+                    recommendation_emotions,
+                    key="recommendation_emotion_filter"
+                )
+            )
+
+            filtered_recommendations = (
+                filter_by_emotion(
+                    filtered_recommendations,
+                    selected_recommendation_emotion
+                )
+            )
+
+            # ------------------------------------------
+            # INTENSITY FILTER
+            # ------------------------------------------
+
+            if "intensity_score" in (
+                filtered_recommendations.columns
+            ):
+
+                filtered_recommendations[
+                    "intensity_score"
+                ] = pd.to_numeric(
+                    filtered_recommendations[
+                        "intensity_score"
+                    ],
+                    errors="coerce"
+                )
+
+                intensity_range = (
+                    st.slider(
+                        "Intensity Range",
+                        min_value=0.0,
+                        max_value=1.0,
+                        value=(0.0, 1.0),
+                        step=0.05,
+                        key="recommendation_intensity_filter"
+                    )
+                )
+
+                filtered_recommendations = (
+                    filter_by_intensity(
+                        filtered_recommendations,
+                        intensity_column="intensity_score",
+                        minimum_intensity=intensity_range[0],
+                        maximum_intensity=intensity_range[1]
+                    )
+                )
+
+            # ------------------------------------------
+            # RECOMMENDATION TYPE
+            # ------------------------------------------
+
+            category_options = [
+                "All"
+            ]
+
+            if "category" in (
+                filtered_recommendations.columns
+            ):
+
+                categories = (
+                    filtered_recommendations[
+                        "category"
+                    ]
+                    .dropna()
+                    .astype(str)
+                    .unique()
+                    .tolist()
+                )
+
+                category_options.extend(
+                    sorted(categories)
+                )
+
+            selected_category = st.selectbox(
+                "Recommendation Type / Category",
+                category_options,
+                key="recommendation_type_filter"
+            )
+
+            filtered_recommendations = (
+                filter_by_recommendation_type(
+                    filtered_recommendations,
+                    selected_category,
+                    column_name="category"
+                )
+            )
+
+            st.metric(
+                "Matching Recommendations",
+                len(filtered_recommendations)
+            )
+
+            st.dataframe(
+                filtered_recommendations,
+                use_container_width=True,
+                hide_index=True
+            )
+
+    except Exception as error:
+
+        st.error(
+            f"Recommendation filtering failed: {error}"
+        )
+
+
+# ==================================================
+# WELLNESS CONTENT
+# ==================================================
+
+with wellness_tab:
+
+    st.subheader(
+        "🧘 Search Wellness Content"
+    )
+
+    try:
+
+        wellness_content = pd.read_csv(
+            "data/wellness_content.csv"
+        )
+
+        if wellness_content.empty:
+
+            st.info(
+                "No wellness content is available."
+            )
+
+        else:
+
+            search_text = st.text_input(
+                "Search wellness content",
+                placeholder=(
+                    "Search title, description, "
+                    "activity..."
+                ),
+                key="wellness_search"
+            )
+
+            # ------------------------------------------
+            # EMOTION OPTIONS
+            # ------------------------------------------
+
+            wellness_emotions = [
+                "All",
+                "Joy",
+                "Sadness",
+                "Anger",
+                "Fear",
+                "Surprise",
+                "Disgust"
+            ]
+
+            selected_wellness_emotion = (
+                st.selectbox(
+                    "Target Emotion",
+                    wellness_emotions,
+                    key="wellness_emotion_filter"
+                )
+            )
+
+            # ------------------------------------------
+            # CATEGORY
+            # ------------------------------------------
+
+            category_options = [
+                "All"
+            ]
+
+            if "category" in wellness_content.columns:
+
+                category_values = (
+                    wellness_content[
+                        "category"
+                    ]
+                    .dropna()
+                    .astype(str)
+                    .unique()
+                    .tolist()
+                )
+
+                category_options.extend(
+                    sorted(category_values)
+                )
+
+            selected_wellness_category = (
+                st.selectbox(
+                    "Category",
+                    category_options,
+                    key="wellness_category_filter"
+                )
+            )
+
+            # ------------------------------------------
+            # ACTIVITY TYPE
+            # ------------------------------------------
+
+            activity_options = [
+                "All"
+            ]
+
+            if (
+                "activity_type"
+                in wellness_content.columns
+            ):
+
+                activity_values = (
+                    wellness_content[
+                        "activity_type"
+                    ]
+                    .dropna()
+                    .astype(str)
+                    .unique()
+                    .tolist()
+                )
+
+                activity_options.extend(
+                    sorted(activity_values)
+                )
+
+            selected_activity = st.selectbox(
+                "Activity Type",
+                activity_options,
+                key="wellness_activity_filter"
+            )
+
+            # ------------------------------------------
+            # DURATION
+            # ------------------------------------------
+
+            minimum_duration = 0
+            maximum_duration = 9999
+
+            if (
+                "duration_minutes"
+                in wellness_content.columns
+            ):
+
+                duration_values = pd.to_numeric(
+                    wellness_content[
+                        "duration_minutes"
+                    ],
+                    errors="coerce"
+                ).dropna()
+
+                if not duration_values.empty:
+
+                    minimum_duration = int(
+                        duration_values.min()
+                    )
+
+                    maximum_duration = int(
+                        duration_values.max()
+                    )
+
+            duration_range = st.slider(
+                "Duration (minutes)",
+                min_value=minimum_duration,
+                max_value=maximum_duration,
+                value=(
+                    minimum_duration,
+                    maximum_duration
+                ),
+                step=1,
+                key="wellness_duration_filter"
+            )
+
+            filtered_wellness = (
+                filter_wellness_content(
+                    dataframe=wellness_content,
+                    search_text=search_text,
+                    emotion=selected_wellness_emotion,
+                    category=selected_wellness_category,
+                    activity_type=selected_activity,
+                    minimum_duration=duration_range[0],
+                    maximum_duration=duration_range[1]
+                )
+            )
+
+            st.metric(
+                "Matching Wellness Items",
+                len(filtered_wellness)
+            )
+
+            st.dataframe(
+                filtered_wellness,
+                use_container_width=True,
+                hide_index=True
+            )
+
+    except Exception as error:
+
+        st.error(
+            f"Wellness content filtering failed: {error}"
+        )
+
+
+# ==================================================
+# FEEDBACK
+# ==================================================
+
+with feedback_tab:
+
+    st.subheader(
+        "📝 Search Feedback Records"
+    )
+
+    try:
+
+        feedback_data = get_user_feedback(
+            user_id
+        )
+
+        if feedback_data.empty:
+
+            st.info(
+                "No feedback records are available "
+                "for this user."
+            )
+
+        else:
+
+            search_text = st.text_input(
+                "Search feedback",
+                placeholder=(
+                    "Search content, interaction, "
+                    "emotion..."
+                ),
+                key="feedback_search"
+            )
+
+            filtered_feedback = filter_feedback(
+                dataframe=feedback_data,
+                search_text=search_text
+            )
+
+            # ------------------------------------------
+            # DATE FILTER
+            # ------------------------------------------
+
+            if "timestamp" in filtered_feedback.columns:
+
+                filtered_feedback[
+                    "timestamp"
+                ] = pd.to_datetime(
+                    filtered_feedback[
+                        "timestamp"
+                    ],
+                    errors="coerce"
+                )
+
+                valid_dates = (
+                    filtered_feedback[
+                        "timestamp"
+                    ]
+                    .dropna()
+                )
+
+                if not valid_dates.empty:
+
+                    min_date = (
+                        valid_dates
+                        .min()
+                        .date()
+                    )
+
+                    max_date = (
+                        valid_dates
+                        .max()
+                        .date()
+                    )
+
+                    date_col1, date_col2 = (
+                        st.columns(2)
+                    )
+
+                    with date_col1:
+
+                        start_date = st.date_input(
+                            "From",
+                            value=min_date,
+                            min_value=min_date,
+                            max_value=max_date,
+                            key="feedback_start_date"
+                        )
+
+                    with date_col2:
+
+                        end_date = st.date_input(
+                            "To",
+                            value=max_date,
+                            min_value=min_date,
+                            max_value=max_date,
+                            key="feedback_end_date"
+                        )
+
+                    filtered_feedback = (
+                        filter_by_date_range(
+                            filtered_feedback,
+                            date_column="timestamp",
+                            start_date=start_date,
+                            end_date=end_date
+                        )
+                    )
+
+            # ------------------------------------------
+            # EMOTION FILTER
+            # ------------------------------------------
+
+            feedback_emotion = st.selectbox(
+                "Emotion",
+                [
+                    "All",
+                    "Joy",
+                    "Sadness",
+                    "Anger",
+                    "Fear",
+                    "Surprise",
+                    "Disgust"
+                ],
+                key="feedback_emotion_filter"
+            )
+
+            filtered_feedback = filter_by_emotion(
+                filtered_feedback,
+                feedback_emotion
+            )
+
+            # ------------------------------------------
+            # FEEDBACK STATUS
+            # ------------------------------------------
+
+            feedback_status = st.selectbox(
+                "Feedback Status",
+                [
+                    "All",
+                    "viewed",
+                    "accepted",
+                    "rejected"
+                ],
+                key="feedback_status_filter"
+            )
+
+            filtered_feedback = (
+                filter_by_feedback_status(
+                    filtered_feedback,
+                    feedback_status
+                )
+            )
+
+            st.metric(
+                "Matching Feedback Records",
+                len(filtered_feedback)
+            )
+
+            st.dataframe(
+                filtered_feedback,
+                use_container_width=True,
+                hide_index=True
+            )
+
+    except Exception as error:
+
+        st.error(
+            f"Feedback filtering failed: {error}"
+        )
 # ==================================================
 # FOOTER
 # ==================================================

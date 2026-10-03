@@ -1,0 +1,46 @@
+timestamp,user_id,content_id,title,rank,hybrid_score,emotion_state,intensity_score,detected_emotions
+2026-10-03T20:48:22,demo_user_001,C011,Creative Doodle Break,1,0.6726,High-intensity surprise state,0.7718,surprise
+2026-10-03T20:48:22,demo_user_001,C005,Positive Music Break,2,0.629,High-intensity surprise state,0.7718,surprise
+2026-10-03T20:48:22,demo_user_001,C009,Grounding Five Four Three Two One,3,0.6289,High-intensity surprise state,0.7718,surprise
+2026-10-03T20:48:22,demo_user_001,C002,Gratitude Reflection,4,0.5798,High-intensity surprise state,0.7718,surprise
+2026-10-03T20:48:22,demo_user_001,C003,Calm Body Scan,5,0.5585,High-intensity surprise state,0.7718,surprise
+2026-10-03T21:12:22,demo_user_001,C005,Positive Music Break,1,0.6592,Very High-intensity joy state,0.9461,joy
+2026-10-03T21:12:22,demo_user_001,C011,Creative Doodle Break,2,0.6441,Very High-intensity joy state,0.9461,joy
+2026-10-03T21:12:22,demo_user_001,C002,Gratitude Reflection,3,0.6112,Very High-intensity joy state,0.9461,joy
+2026-10-03T21:12:22,demo_user_001,C014,Celebration Playlist,4,0.5492,Very High-intensity joy state,0.9461,joy
+2026-10-03T21:12:22,demo_user_001,C003,Calm Body Scan,5,0.5317,Very High-intensity joy state,0.9461,joy
+2026-10-03T21:12:32,demo_user_001,C003,Calm Body Scan,1,0.8359,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:12:32,demo_user_001,C001,Box Breathing Reset,2,0.8202,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:12:32,demo_user_001,C004,Gentle Walk,3,0.7812,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:12:32,demo_user_001,C010,Mindful Tea Break,4,0.7405,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:12:32,demo_user_001,C008,Five Minute Stretch,5,0.6871,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:14:38,demo_user_001,C003,Calm Body Scan,1,0.8359,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:14:38,demo_user_001,C001,Box Breathing Reset,2,0.8202,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:14:38,demo_user_001,C004,Gentle Walk,3,0.7812,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:14:38,demo_user_001,C010,Mindful Tea Break,4,0.7405,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:14:38,demo_user_001,C008,Five Minute Stretch,5,0.6871,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:19:12,demo_user_001,C003,Calm Body Scan,1,0.8359,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:19:12,demo_user_001,C001,Box Breathing Reset,2,0.8202,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:19:12,demo_user_001,C004,Gentle Walk,3,0.7812,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:19:12,demo_user_001,C010,Mindful Tea Break,4,0.7405,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:19:12,demo_user_001,C008,Five Minute Stretch,5,0.6871,Very High-intensity fear state,0.8807,fear
+2026-10-03T21:19:34,demo_user_001,C003,Calm Body Scan,1,0.7773,Very High-intensity anger state,0.9318,anger
+2026-10-03T21:19:34,demo_user_001,C001,Box Breathing Reset,2,0.7692,Very High-intensity anger state,0.9318,anger
+2026-10-03T21:19:34,demo_user_001,C006,Anger Pause Technique,3,0.7553,Very High-intensity anger state,0.9318,anger
+2026-10-03T21:19:34,demo_user_001,C004,Gentle Walk,4,0.7292,Very High-intensity anger state,0.9318,anger
+2026-10-03T21:19:34,demo_user_001,C008,Five Minute Stretch,5,0.6337,Very High-intensity anger state,0.9318,anger
+2026-10-03T21:20:14,demo_user_001,C005,Positive Music Break,1,0.6594,Very High-intensity joy state,0.9475,joy
+2026-10-03T21:20:14,demo_user_001,C011,Creative Doodle Break,2,0.6442,Very High-intensity joy state,0.9475,joy
+2026-10-03T21:20:14,demo_user_001,C002,Gratitude Reflection,3,0.6107,Very High-intensity joy state,0.9475,joy
+2026-10-03T21:20:14,demo_user_001,C014,Celebration Playlist,4,0.5495,Very High-intensity joy state,0.9475,joy
+2026-10-03T21:20:14,demo_user_001,C003,Calm Body Scan,5,0.5322,Very High-intensity joy state,0.9475,joy
+2026-10-03T21:21:20,demo_user_001,C003,Calm Body Scan,1,0.8215,Very High-intensity sadness state,0.9593,sadness
+2026-10-03T21:21:20,demo_user_001,C004,Gentle Walk,2,0.7768,Very High-intensity sadness state,0.9593,sadness
+2026-10-03T21:21:20,demo_user_001,C010,Mindful Tea Break,3,0.7336,Very High-intensity sadness state,0.9593,sadness
+2026-10-03T21:21:20,demo_user_001,C008,Five Minute Stretch,4,0.6822,Very High-intensity sadness state,0.9593,sadness
+2026-10-03T21:21:20,demo_user_001,C013,Compassionate Check In,5,0.6796,Very High-intensity sadness state,0.9593,sadness
+2026-10-03T21:22:40,demo_user_001,C003,Calm Body Scan,1,0.8316,Very High-intensity fear state,0.8377,fear
+2026-10-03T21:22:40,demo_user_001,C001,Box Breathing Reset,2,0.8155,Very High-intensity fear state,0.8377,fear
+2026-10-03T21:22:40,demo_user_001,C004,Gentle Walk,3,0.7763,Very High-intensity fear state,0.8377,fear
+2026-10-03T21:22:40,demo_user_001,C010,Mindful Tea Break,4,0.7353,Very High-intensity fear state,0.8377,fear
+2026-10-03T21:22:40,demo_user_001,C008,Five Minute Stretch,5,0.6829,Very High-intensity fear state,0.8377,fear
